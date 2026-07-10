@@ -1,0 +1,19 @@
+server:
+  port: 8080
+  cors_origins:
+    - http://localhost:5173
+    - http://localhost:3000
+
+jwt:
+  secret: change-this-secret-before-production
+  expire_hour: 24
+
+database:
+  path: ./data/aipanel.db
+
+security:
+  initial_username: admin
+  initial_password: admin123
+
+system:
+  disk_path: .

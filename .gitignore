@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Frontend build
+frontend/dist/
+frontend/.vite-temp/
+frontend/.vue-global-types/
+frontend/*.tsbuildinfo
+frontend/vite.config.d.ts
+frontend/vite.config.js
+
+# Local runtime data
+data/
+tmp/
+
+# Go build artifacts
+*.exe
+*.test
+
+# Logs
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

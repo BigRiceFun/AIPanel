@@ -1,0 +1,25 @@
+.git
+.gitignore
+.dockerignore
+
+# Local dependencies and build output
+frontend/node_modules
+frontend/dist
+frontend/.vite-temp
+frontend/.vue-global-types
+frontend/*.tsbuildinfo
+frontend/vite.config.d.ts
+frontend/vite.config.js
+
+# Runtime data and temp files
+data
+tmp
+*.log
+*.exe
+*.test
+
+# Editor / OS files
+.idea
+.vscode
+.DS_Store
+Thumbs.db
