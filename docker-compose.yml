@@ -9,6 +9,7 @@ services:
     volumes:
       - ./data:/app/data
       - ./config.yaml:/app/config.yaml:ro
+      - /var/log:/host/var/log:ro
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - AIPANEL_CONFIG=/app/config.yaml

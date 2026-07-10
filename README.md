@@ -16,8 +16,8 @@ Lightweight AI-first Server Panel.
 
 ## 技术栈
 
-- Frontend: Vue 3, Vite, TypeScript, Element Plus, Pinia, Vue Router, Axios, ECharts
-- Backend: Go, Gin, SQLite, GORM, JWT, gopsutil, Docker SDK
+- Frontend: Vue 3, Vite, TypeScript, Element Plus, Pinia, Vue Router, Axios, ECharts, xterm.js
+- Backend: Go, Gin, SQLite, GORM, JWT, gopsutil, Docker SDK, WebSocket
 
 ## 已实现 API
 
@@ -91,10 +91,27 @@ http://localhost:3000
 http://localhost:8080
 ```
 
+Docker 部署时，系统日志读取会挂载宿主机日志目录：
+
+```yaml
+- /var/log:/host/var/log:ro
+```
+
+Web Terminal 通过前端 Nginx 代理 WebSocket：
+
+```text
+/api/terminal/ws
+```
+
 ## 配置
 
-根目录 `config.yaml` 控制服务端口、JWT、SQLite 路径和初始管理员。
-生产环境请修改 `jwt.secret` 和默认管理员密码。
+根目录 `config.yaml` 控制服务端口、JWT、SQLite 路径、初始管理员、Terminal 和 AI Provider 默认配置。
+
+生产环境请修改：
+
+- `jwt.secret`
+- 默认管理员密码
+- AI Provider API Key
 
 如果生产环境需要浏览器直接访问后端 API，可用环境变量覆盖 CORS 来源，避免把服务器 IP 或域名写进仓库：
 

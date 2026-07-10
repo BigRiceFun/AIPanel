@@ -1,9 +1,12 @@
 package log
 
 import (
+	"bufio"
+	"errors"
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -52,7 +55,7 @@ func readSystemLogs(logType string, limit int) ([]string, error) {
 	cmd.Env = append(os.Environ(), "SYSTEMD_COLORS=0")
 	output, err := cmd.Output()
 	if err != nil {
-		return nil, err
+		return readLogFiles(logType, limit)
 	}
 
 	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
@@ -64,4 +67,66 @@ func readSystemLogs(logType string, limit int) ([]string, error) {
 		lines[i] = strings.TrimRight(lines[i], "\r")
 	}
 	return lines, nil
+}
+
+func readLogFiles(logType string, limit int) ([]string, error) {
+	paths := candidateLogFiles(logType)
+	for _, path := range paths {
+		lines, err := tailFile(path, limit)
+		if err == nil && len(lines) > 0 {
+			return lines, nil
+		}
+	}
+	return []string{
+		"journalctl is not available and no readable host log files were found",
+		"mount /var/log to /host/var/log or run the server directly on a Linux host",
+	}, nil
+}
+
+func candidateLogFiles(logType string) []string {
+	base := "/host/var/log"
+	if logType == "kernel" {
+		return []string{
+			filepath.Join(base, "kern.log"),
+			filepath.Join(base, "dmesg"),
+			filepath.Join(base, "messages"),
+		}
+	}
+	return []string{
+		filepath.Join(base, "syslog"),
+		filepath.Join(base, "messages"),
+		filepath.Join(base, "auth.log"),
+	}
+}
+
+func tailFile(path string, limit int) ([]string, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	stat, err := file.Stat()
+	if err != nil {
+		return nil, err
+	}
+	if stat.IsDir() {
+		return nil, errors.New("path is a directory")
+	}
+
+	ring := make([]string, 0, limit)
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if len(ring) < limit {
+			ring = append(ring, line)
+			continue
+		}
+		copy(ring, ring[1:])
+		ring[len(ring)-1] = line
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	return ring, nil
 }
