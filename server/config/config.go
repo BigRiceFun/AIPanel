@@ -14,6 +14,8 @@ type Config struct {
 	Database DatabaseConfig `yaml:"database"`
 	Security SecurityConfig `yaml:"security"`
 	System   SystemConfig   `yaml:"system"`
+	Terminal TerminalConfig `yaml:"terminal"`
+	AI       AIConfig       `yaml:"ai"`
 }
 
 type ServerConfig struct {
@@ -37,6 +39,18 @@ type SecurityConfig struct {
 
 type SystemConfig struct {
 	DiskPath string `yaml:"disk_path"`
+}
+
+type TerminalConfig struct {
+	Enabled bool   `yaml:"enabled"`
+	Shell   string `yaml:"shell"`
+}
+
+type AIConfig struct {
+	Provider string `yaml:"provider"`
+	BaseURL  string `yaml:"base_url"`
+	APIKey   string `yaml:"api_key"`
+	Model    string `yaml:"model"`
 }
 
 func Load() (*Config, error) {
@@ -83,6 +97,19 @@ func applyDefaults(cfg *Config) {
 	if cfg.System.DiskPath == "" {
 		cfg.System.DiskPath = "."
 	}
+	if cfg.Terminal.Shell == "" {
+		cfg.Terminal.Shell = defaultShell()
+	}
+	if cfg.AI.Provider == "" {
+		cfg.AI.Provider = "openai"
+	}
+}
+
+func defaultShell() string {
+	if os.Getenv("OS") == "Windows_NT" {
+		return "powershell.exe"
+	}
+	return "/bin/bash"
 }
 
 func splitCSV(value string) []string {

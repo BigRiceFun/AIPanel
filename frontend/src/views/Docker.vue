@@ -19,8 +19,9 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Actions" width="320" fixed="right">
+      <el-table-column label="Actions" width="420" fixed="right">
         <template #default="{ row }">
+          <el-button size="small" :icon="Document" @click="openLogs(row)">日志</el-button>
           <el-button size="small" type="success" :icon="VideoPlay" @click="runAction('start', row.id)">
             启动
           </el-button>
@@ -36,16 +37,25 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <el-drawer v-model="logsVisible" :title="`容器日志 - ${activeContainer?.name || ''}`" size="50%">
+      <div v-loading="logsLoading" ref="logsRef" class="log-viewer">
+        <div v-for="(line, index) in logs" :key="index" class="log-line">
+          {{ line }}
+        </div>
+      </div>
+    </el-drawer>
   </section>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Delete, Refresh, RefreshRight, VideoPause, VideoPlay } from '@element-plus/icons-vue'
+import { Delete, Document, Refresh, RefreshRight, VideoPause, VideoPlay } from '@element-plus/icons-vue'
 
 import {
   getContainers,
+  getContainerLogs,
   removeContainer,
   restartContainer,
   startContainer,
@@ -57,6 +67,12 @@ type Action = 'start' | 'stop' | 'restart' | 'remove'
 
 const containers = ref<DockerContainer[]>([])
 const loading = ref(false)
+const logsVisible = ref(false)
+const logsLoading = ref(false)
+const logs = ref<string[]>([])
+const activeContainer = ref<DockerContainer>()
+const logsRef = ref<HTMLDivElement>()
+let logsTimer: number | undefined
 
 async function loadContainers() {
   loading.value = true
@@ -81,5 +97,31 @@ async function runAction(action: Action, id: string) {
   await loadContainers()
 }
 
+async function openLogs(container: DockerContainer) {
+  activeContainer.value = container
+  logsVisible.value = true
+  await loadLogs()
+  if (logsTimer) window.clearInterval(logsTimer)
+  logsTimer = window.setInterval(loadLogs, 3000)
+}
+
+async function loadLogs() {
+  if (!activeContainer.value) return
+  logsLoading.value = true
+  try {
+    const { data } = await getContainerLogs(activeContainer.value.id)
+    logs.value = data.logs
+    await nextTick()
+    if (logsRef.value) {
+      logsRef.value.scrollTop = logsRef.value.scrollHeight
+    }
+  } finally {
+    logsLoading.value = false
+  }
+}
+
 onMounted(loadContainers)
+onBeforeUnmount(() => {
+  if (logsTimer) window.clearInterval(logsTimer)
+})
 </script>

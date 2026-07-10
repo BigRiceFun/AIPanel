@@ -28,9 +28,24 @@ const router = createRouter({
           component: () => import('@/views/Docker.vue'),
         },
         {
+          path: 'terminal',
+          name: 'terminal',
+          component: () => import('@/views/Terminal.vue'),
+        },
+        {
+          path: 'logs',
+          name: 'logs',
+          component: () => import('@/views/Logs.vue'),
+        },
+        {
           path: 'settings',
           name: 'settings',
           component: () => import('@/views/Settings.vue'),
+        },
+        {
+          path: 'audit',
+          name: 'audit',
+          component: () => import('@/views/Audit.vue'),
         },
       ],
     },

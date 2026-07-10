@@ -23,7 +23,7 @@ func Open(path string) (*gorm.DB, error) {
 }
 
 func Migrate(db *gorm.DB) error {
-	return db.AutoMigrate(&models.User{})
+	return db.AutoMigrate(&models.User{}, &models.AIConfig{}, &models.AuditLog{})
 }
 
 func SeedAdmin(db *gorm.DB, username string, password string) error {

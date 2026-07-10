@@ -18,9 +18,21 @@
           <el-icon><Box /></el-icon>
           <span>Docker</span>
         </el-menu-item>
+        <el-menu-item index="/terminal">
+          <el-icon><Operation /></el-icon>
+          <span>Terminal</span>
+        </el-menu-item>
+        <el-menu-item index="/logs">
+          <el-icon><Document /></el-icon>
+          <span>Logs</span>
+        </el-menu-item>
         <el-menu-item index="/settings">
           <el-icon><Setting /></el-icon>
           <span>Settings</span>
+        </el-menu-item>
+        <el-menu-item index="/audit">
+          <el-icon><Tickets /></el-icon>
+          <span>Audit</span>
         </el-menu-item>
       </el-menu>
     </el-aside>
@@ -44,7 +56,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Box, Monitor, Setting, SwitchButton } from '@element-plus/icons-vue'
+import { Box, Document, Monitor, Operation, Setting, SwitchButton, Tickets } from '@element-plus/icons-vue'
 
 import { useAuthStore } from '@/stores/auth'
 
@@ -55,7 +67,10 @@ const auth = useAuthStore()
 const activePath = computed(() => route.path)
 const pageTitle = computed(() => {
   if (route.path.startsWith('/docker')) return 'Docker'
+  if (route.path.startsWith('/terminal')) return 'Terminal'
+  if (route.path.startsWith('/logs')) return 'Logs'
   if (route.path.startsWith('/settings')) return 'Settings'
+  if (route.path.startsWith('/audit')) return 'Audit'
   return 'Dashboard'
 })
 

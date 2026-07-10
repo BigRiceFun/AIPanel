@@ -3,11 +3,13 @@ module github.com/aipanel/aipanel/server
 go 1.25.0
 
 require (
+	github.com/creack/pty v1.1.24
 	github.com/docker/docker v27.5.1+incompatible
 	github.com/gin-contrib/cors v1.7.6
 	github.com/gin-gonic/gin v1.10.1
 	github.com/glebarez/sqlite v1.11.0
 	github.com/golang-jwt/jwt/v5 v5.2.2
+	github.com/gorilla/websocket v1.5.3
 	github.com/shirou/gopsutil/v4 v4.25.1
 	golang.org/x/crypto v0.51.0
 	gopkg.in/yaml.v3 v3.0.1

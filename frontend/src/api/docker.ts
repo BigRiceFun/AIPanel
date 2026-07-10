@@ -7,8 +7,19 @@ export interface DockerContainer {
   status: string
 }
 
+export interface DockerLogsResponse {
+  container: string
+  logs: string[]
+}
+
 export function getContainers() {
   return http.get<DockerContainer[]>('/docker/containers')
+}
+
+export function getContainerLogs(id: string, follow = false) {
+  return http.get<DockerLogsResponse>(`/docker/logs/${id}`, {
+    params: { follow },
+  })
 }
 
 export function startContainer(id: string) {

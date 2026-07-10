@@ -2,18 +2,41 @@
 
 Lightweight AI-first Server Panel.
 
-当前第一阶段聚焦基础面板能力：
+当前已实现的基础面板能力：
 
 - 用户登录认证
 - Dashboard 系统监控
 - Docker 容器管理
+- Web Terminal
+- Docker / 系统日志查看
+- AI Provider 基础配置
+- 操作审计记录
 
-暂未实现 AI Chat、Workflow、Plugin、Terminal、日志分析。
+暂未实现 AI Agent、Workflow Engine、Plugin Marketplace、自动执行任务。
 
 ## 技术栈
 
 - Frontend: Vue 3, Vite, TypeScript, Element Plus, Pinia, Vue Router, Axios, ECharts
 - Backend: Go, Gin, SQLite, GORM, JWT, gopsutil, Docker SDK
+
+## 已实现 API
+
+```text
+POST   /api/auth/login
+GET    /api/system/status
+GET    /api/system/logs
+GET    /api/docker/containers
+GET    /api/docker/logs/:id
+POST   /api/docker/start/:id
+POST   /api/docker/stop/:id
+POST   /api/docker/restart/:id
+DELETE /api/docker/remove/:id
+GET    /api/terminal/ws
+GET    /api/ai/config
+POST   /api/ai/config
+POST   /api/ai/test
+GET    /api/audit/logs
+```
 
 ## 本地开发
 

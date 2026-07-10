@@ -235,6 +235,58 @@ body {
   max-width: 720px;
 }
 
+.settings-form {
+  max-width: 640px;
+}
+
+.form-actions,
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toolbar {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.terminal-panel {
+  height: calc(100vh - 120px);
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-box {
+  flex: 1;
+  min-height: 420px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #0b0f14;
+  padding: 8px;
+}
+
+.log-viewer {
+  height: 520px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #0b0f14;
+  padding: 12px;
+  color: #dce6f4;
+  font-family: "JetBrains Mono", Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.log-line {
+  min-height: 19px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 @media (max-width: 900px) {
   .sidebar {
     width: 76px !important;

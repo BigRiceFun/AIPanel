@@ -12,6 +12,8 @@ frontend/vite.config.js
 # Local runtime data
 data/
 tmp/
+doc/
+docs/
 
 # Go build artifacts
 *.exe
