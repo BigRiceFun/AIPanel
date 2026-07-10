@@ -97,7 +97,7 @@ func (h *Handler) Test(c *gin.Context) {
 		}
 	}
 
-	provider := NewOpenAIProvider(cfg.BaseURL, cfg.APIKey, cfg.Model)
+	provider := NewProvider(cfg.Provider, cfg.BaseURL, cfg.APIKey, cfg.Model)
 	resp, err := provider.Chat([]Message{{Role: "user", Content: "ping"}})
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{"success": false, "model": cfg.Model, "error": err.Error()})

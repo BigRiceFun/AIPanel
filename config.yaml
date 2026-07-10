@@ -23,7 +23,7 @@ terminal:
   shell: /bin/bash
 
 ai:
-  provider: openai
+  provider: openai_chat
   base_url: https://api.openai.com/v1
   api_key:
   model: gpt-5-mini

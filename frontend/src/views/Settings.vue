@@ -10,7 +10,10 @@
     <el-form label-position="top" :model="form" class="settings-form">
       <el-form-item label="Provider">
         <el-select v-model="form.provider">
-          <el-option label="OpenAI Compatible" value="openai" />
+          <el-option label="OpenAI Chat Completions / Compatible" value="openai_chat" />
+          <el-option label="OpenAI Responses API" value="openai_responses" />
+          <el-option label="Gemini GenerateContent" value="gemini" />
+          <el-option label="Anthropic Messages API" value="anthropic" />
         </el-select>
       </el-form-item>
       <el-form-item label="Base URL">
@@ -40,7 +43,7 @@ const saving = ref(false)
 const testing = ref(false)
 const form = reactive<AIConfig>({
   name: 'default',
-  provider: 'openai',
+  provider: 'openai_chat',
   base_url: 'https://api.openai.com/v1',
   api_key: '',
   model: 'gpt-5-mini',

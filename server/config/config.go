@@ -101,7 +101,7 @@ func applyDefaults(cfg *Config) {
 		cfg.Terminal.Shell = defaultShell()
 	}
 	if cfg.AI.Provider == "" {
-		cfg.AI.Provider = "openai"
+		cfg.AI.Provider = "openai_chat"
 	}
 }
 

@@ -38,6 +38,15 @@ POST   /api/ai/test
 GET    /api/audit/logs
 ```
 
+AI Provider 当前支持：
+
+```text
+openai_chat       OpenAI Chat Completions / OpenAI Compatible
+openai_responses  OpenAI Responses API
+gemini            Gemini GenerateContent
+anthropic         Anthropic Messages API
+```
+
 ## 本地开发
 
 后端：
