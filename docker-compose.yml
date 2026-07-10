@@ -1,27 +1,13 @@
 services:
-  server:
-    build:
-      context: .
-      dockerfile: server/Dockerfile
-    container_name: aipanel-server
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./data:/app/data
-      - ./config.yaml:/app/config.yaml:ro
-      - /var/log:/host/var/log:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - AIPANEL_CONFIG=/app/config.yaml
-    restart: unless-stopped
-
   frontend:
     build:
       context: .
       dockerfile: frontend/Dockerfile
+      args:
+        NGINX_CONF: frontend/nginx.host.conf
     container_name: aipanel-frontend
     ports:
       - "3000:80"
-    depends_on:
-      - server
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     restart: unless-stopped

@@ -73,10 +73,42 @@ username: admin
 password: admin123
 ```
 
-## Docker 部署
+## 宿主机运行 server
+
+生产环境推荐把 server 直接运行在宿主机，这样 Web Terminal 操作的就是宿主机 shell。
+
+```bash
+cd server
+go mod tidy
+go build -o aipanel-server .
+cd ..
+AIPANEL_CONFIG=./config.yaml ./server/aipanel-server
+```
+
+使用 systemd：
+
+```bash
+sudo mkdir -p /opt/aipanel
+sudo cp -r server deploy config.yaml /opt/aipanel/
+cd /opt/aipanel/server
+go build -o aipanel-server .
+sudo cp /opt/aipanel/deploy/aipanel-server.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now aipanel-server
+```
+
+> 如果使用 systemd，请根据实际部署路径调整 `deploy/aipanel-server.service` 中的 `/opt/aipanel`。
+
+## 前端 Docker 部署
 
 ```bash
 docker compose up -d --build
+```
+
+当前 `docker-compose.yml` 只启动 frontend，Nginx 会把 `/api` 代理到宿主机：
+
+```text
+http://host.docker.internal:8080
 ```
 
 访问：
@@ -89,12 +121,6 @@ http://localhost:3000
 
 ```text
 http://localhost:8080
-```
-
-Docker 部署时，系统日志读取会挂载宿主机日志目录：
-
-```yaml
-- /var/log:/host/var/log:ro
 ```
 
 Web Terminal 通过前端 Nginx 代理 WebSocket：

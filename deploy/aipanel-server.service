@@ -1,0 +1,15 @@
+[Unit]
+Description=AIPanel Server
+After=network.target docker.service
+Wants=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/aipanel
+Environment=AIPANEL_CONFIG=/opt/aipanel/config.yaml
+ExecStart=/opt/aipanel/server/aipanel-server
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
