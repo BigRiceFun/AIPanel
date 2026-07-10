@@ -53,7 +53,19 @@ docker compose up -d --build
 http://localhost:3000
 ```
 
+后端 API 直连端口：
+
+```text
+http://localhost:8080
+```
+
 ## 配置
 
 根目录 `config.yaml` 控制服务端口、JWT、SQLite 路径和初始管理员。
 生产环境请修改 `jwt.secret` 和默认管理员密码。
+
+如果生产环境需要浏览器直接访问后端 API，可用环境变量覆盖 CORS 来源，避免把服务器 IP 或域名写进仓库：
+
+```bash
+AIPANEL_CORS_ORIGINS="http://your-domain:3000,http://localhost:5173"
+```

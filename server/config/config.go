@@ -55,12 +55,19 @@ func Load() (*Config, error) {
 		return nil, err
 	}
 
+	applyEnvOverrides(&cfg)
 	applyDefaults(&cfg)
 	if err := validate(&cfg); err != nil {
 		return nil, err
 	}
 
 	return &cfg, nil
+}
+
+func applyEnvOverrides(cfg *Config) {
+	if origins := os.Getenv("AIPANEL_CORS_ORIGINS"); origins != "" {
+		cfg.Server.CorsOrigins = splitCSV(origins)
+	}
 }
 
 func applyDefaults(cfg *Config) {
@@ -76,6 +83,18 @@ func applyDefaults(cfg *Config) {
 	if cfg.System.DiskPath == "" {
 		cfg.System.DiskPath = "."
 	}
+}
+
+func splitCSV(value string) []string {
+	parts := strings.Split(value, ",")
+	result := make([]string, 0, len(parts))
+	for _, part := range parts {
+		item := strings.TrimSpace(part)
+		if item != "" {
+			result = append(result, item)
+		}
+	}
+	return result
 }
 
 func validate(cfg *Config) error {
