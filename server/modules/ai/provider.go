@@ -121,6 +121,7 @@ func (p *OpenAIResponsesProvider) Chat(messages []Message) (*Response, error) {
 	body := map[string]any{
 		"model": p.cfg.Model,
 		"input": toResponsesInput(messages),
+		"store": false,
 	}
 
 	var result struct {
@@ -133,7 +134,10 @@ func (p *OpenAIResponsesProvider) Chat(messages []Message) (*Response, error) {
 			} `json:"content"`
 		} `json:"output"`
 	}
-	if err := postJSON(p.client, p.cfg.BaseURL+"/responses", p.cfg.APIKey, body, &result); err != nil {
+	if err := postJSONWithHeaders(p.client, p.cfg.BaseURL+"/responses", p.cfg.APIKey, body, &result, map[string]string{
+		"Accept":    "application/json",
+		"x-api-key": p.cfg.APIKey,
+	}); err != nil {
 		return nil, err
 	}
 
@@ -224,6 +228,10 @@ func (p *GeminiProvider) Chat(messages []Message) (*Response, error) {
 }
 
 func postJSON(client *http.Client, url string, apiKey string, body any, out any) error {
+	return postJSONWithHeaders(client, url, apiKey, body, out, nil)
+}
+
+func postJSONWithHeaders(client *http.Client, url string, apiKey string, body any, out any, headers map[string]string) error {
 	payload, err := json.Marshal(body)
 	if err != nil {
 		return err
@@ -236,6 +244,11 @@ func postJSON(client *http.Client, url string, apiKey string, body any, out any)
 	req.Header.Set("Content-Type", "application/json")
 	if apiKey != "" {
 		req.Header.Set("Authorization", "Bearer "+apiKey)
+	}
+	for key, value := range headers {
+		if value != "" {
+			req.Header.Set(key, value)
+		}
 	}
 
 	resp, err := client.Do(req)
