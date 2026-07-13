@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -244,7 +245,12 @@ func postJSON(client *http.Client, url string, apiKey string, body any, out any)
 	defer resp.Body.Close()
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return fmt.Errorf("provider returned status %d", resp.StatusCode)
+		body, _ := io.ReadAll(io.LimitReader(resp.Body, 4096))
+		detail := strings.TrimSpace(string(body))
+		if detail == "" {
+			return fmt.Errorf("provider returned status %d", resp.StatusCode)
+		}
+		return fmt.Errorf("provider returned status %d: %s", resp.StatusCode, detail)
 	}
 
 	return json.NewDecoder(resp.Body).Decode(out)
@@ -271,7 +277,12 @@ func postAnthropicJSON(client *http.Client, url string, apiKey string, body any,
 	defer resp.Body.Close()
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return fmt.Errorf("provider returned status %d", resp.StatusCode)
+		body, _ := io.ReadAll(io.LimitReader(resp.Body, 4096))
+		detail := strings.TrimSpace(string(body))
+		if detail == "" {
+			return fmt.Errorf("provider returned status %d", resp.StatusCode)
+		}
+		return fmt.Errorf("provider returned status %d: %s", resp.StatusCode, detail)
 	}
 
 	return json.NewDecoder(resp.Body).Decode(out)
